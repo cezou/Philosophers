@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/03/29 12:26:46 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/03/29 12:33:22 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	init_philo(t_philo *p, int ac, char **av)
 	set_value_or_exit(atoi_is_unsignedint(av[3]), &p->time_to_eat);
 	set_value_or_exit(atoi_is_unsignedint(av[4]), &p->time_to_sleep);
 	if (ac == 6)
-		set_value_or_exit(atoi_is_unsignedint(av[4]), &p->philo_must_eat);
+		set_value_or_exit(atoi_is_unsignedint(av[5]), &p->philo_must_eat);
 }
 
 int	main(int ac, char **av)
