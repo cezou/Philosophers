@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/03/29 12:01:42 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/03/29 15:20:55 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ long int	atoi_is_unsignedint(const char *s)
 		if (!is_nb(s[i]))
 			return (-1);
 		nb = nb * 10 + s[i] - '0';
-		if (nb > UINT_MAX)
+		if (nb > INT_MAX)
 			return (-1);
 		i++;
 	}

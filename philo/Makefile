@@ -1,5 +1,4 @@
 NAME = philo
-NAME_BONUS = $(NAME)_bonus
 
 HEADER = $(NAME).h
 INCLUDES = -I.
@@ -23,8 +22,6 @@ $(OBJ_PATH)/%.o: %.c
 
 $(NAME) : ${OBJ} $(HEADER) Makefile
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
-
-bonus: $(NAME_BONUS)
 
 clean: 
 	rm -rf $(OBJ_PATH)

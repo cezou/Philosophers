@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/03/29 12:22:26 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/09 15:10:59 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 typedef struct s_philo
 {
+	bool	must_eat;
 	size_t	nb_philo;
 	size_t	time_to_die;
 	size_t	time_to_eat;
