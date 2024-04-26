@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/25 05:56:47 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 12:34:19 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	destroy_all_mutexes(t_vars *v, pthread_mutex_t *forks,
 	destroy_mutex(&v->write_lock);
 	destroy_mutex(&v->dead_lock);
 	destroy_mutex(&v->meal_lock);
+	destroy_mutex(&v->is_eating_lock);
 	i = 0;
 	while (i < nb_crampted)
 		destroy_mutex(&forks[i++]);
@@ -48,6 +49,9 @@ int	init_mutexes(t_vars *v, pthread_mutex_t *forks, size_t nb_philos)
 	if (!init_mutex(&v->meal_lock))
 		return (destroy_mutex(&v->write_lock), destroy_mutex(&v->dead_lock),
 			-1);
+	if (!init_mutex(&v->is_eating_lock))
+		return (destroy_mutex(&v->meal_lock), destroy_mutex(&v->write_lock),
+			destroy_mutex(&v->dead_lock), -1);
 	i = -1;
 	while (++i < (int)nb_philos)
 		if (!init_mutex(&forks[i]))

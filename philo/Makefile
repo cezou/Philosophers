@@ -12,7 +12,7 @@ SRC := $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SRC))
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g $(INCLUDES) -pthread
+CFLAGS = -Wall -Werror -Wextra -g3 $(INCLUDES) -pthread
 
 all: $(NAME)
 

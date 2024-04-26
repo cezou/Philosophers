@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 11:59:40 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 15:47:16 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,21 @@ typedef struct s_infos
 
 typedef struct s_philo
 {
+	pthread_t		thread;
+
 	t_infos			infos;
 	size_t			start_time;
 	size_t			id;
-	pthread_t		thread;
 	bool			is_eating;
 	size_t			meals_eaten;
 	size_t			time_of_last_meal;
 	bool			*is_dead;
+
 	pthread_mutex_t	*fork[2];
 	pthread_mutex_t	*write_lock;
 	pthread_mutex_t	*dead_lock;
 	pthread_mutex_t	*meal_lock;
+	pthread_mutex_t	*is_eating_lock;
 
 }					t_philo;
 
@@ -59,6 +62,8 @@ typedef struct s_vars
 	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	write_lock;
+	pthread_mutex_t	is_eating_lock;
+
 	pthread_mutex_t	forks[MAX_PHILOS];
 	t_philo			philos[MAX_PHILOS];
 	pthread_t		monitor;
@@ -91,8 +96,10 @@ typedef struct s_vars
 # define FAIL EXIT_FAILURE
 
 /* FUNCTIONS */
+bool				is_eating(t_philo *philo);
+size_t				get_philo_age(t_philo *p);
 bool				is_dead_routine(t_philo *p);
-bool				is_dead_monitor(t_philo philo);
+bool				is_dead_monitor(t_philo *philo);
 bool				is_dead_routine(t_philo *p);
 void				locked_print(char *s, t_philo *p);
 
@@ -118,6 +125,5 @@ bool				is_nb(char c);
 bool				is_whitespace(char c);
 void				err(char *s);
 size_t				get_ms(void);
-size_t				get_philo_age(t_philo p);
 
 #endif

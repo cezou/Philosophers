@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 11:59:26 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 17:21:30 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ void	eat(t_philo *p, bool is_even)
 	locked_print("has taken a fork", p);
 	pthread_mutex_lock(p->fork[is_even]);
 	locked_print("has taken a fork", p);
+	pthread_mutex_lock(p->is_eating_lock);
 	p->is_eating = 1;
+	pthread_mutex_unlock(p->is_eating_lock);
 	locked_print("is " GREEN "eating" RESET, p);
 	pthread_mutex_lock(p->meal_lock);
 	p->time_of_last_meal = get_ms();
@@ -40,10 +42,34 @@ void	eat(t_philo *p, bool is_even)
 	sleep_if_not_dead(p, p->infos.time_to_eat, 1);
 	pthread_mutex_unlock(p->fork[!is_even]);
 	pthread_mutex_unlock(p->fork[is_even]);
+	pthread_mutex_lock(p->is_eating_lock);
+	p->is_eating = 0;
+	pthread_mutex_unlock(p->is_eating_lock);
 	pthread_mutex_lock(p->meal_lock);
 	if (p->infos.must_eat)
 		p->meals_eaten++;
 	pthread_mutex_unlock(p->meal_lock);
+	return ;
+}
+// (cheh t'es tout seul)
+void	eat_alone(t_philo *p)
+{
+	pthread_mutex_lock(p->fork[0]);
+	locked_print("has taken a fork", p);
+	pthread_mutex_lock(p->is_eating_lock);
+	p->is_eating = 1;
+	pthread_mutex_unlock(p->is_eating_lock);
+	locked_print("is " GREEN "eating" RESET, p);
+	pthread_mutex_lock(p->meal_lock);
+	p->time_of_last_meal = get_ms();
+	pthread_mutex_unlock(p->meal_lock);
+	sleep_if_not_dead(p, p->infos.time_to_eat, 1);
+	pthread_mutex_unlock(p->fork[0]);
+	pthread_mutex_lock(p->is_eating_lock);
+	p->is_eating = 0;
+	pthread_mutex_unlock(p->is_eating_lock);
+	if (p->infos.must_eat)
+		p->meals_eaten++;
 	return ;
 }
 
@@ -56,7 +82,7 @@ void	think(t_philo *p)
 void	slip(t_philo *p)
 {
 	locked_print("is " BLUE "sleeping" RESET, p);
-	return (sleep_if_not_dead(p, p->infos.time_to_eat, 1));
+	return (sleep_if_not_dead(p, p->infos.time_to_sleep, 1));
 }
 
 void	*routine(void *philosopher)
@@ -64,8 +90,10 @@ void	*routine(void *philosopher)
 	t_philo	*philo;
 
 	philo = (t_philo *)(philosopher);
+	pthread_mutex_lock(philo->meal_lock);
 	philo->start_time = get_ms();
 	philo->time_of_last_meal = get_ms();
+	pthread_mutex_unlock(philo->meal_lock);
 	while (!is_dead_routine(philo))
 	{
 		if (!is_dead_routine(philo))

@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/25 11:10:44 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 16:00:37 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,31 @@ bool	is_whitespace(char c)
 size_t	get_ms(void)
 {
 	struct timeval	time;
+	long int		ms;
 
 	if (gettimeofday(&time, NULL) == -1)
 		return (0);
-	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+	ms = time.tv_sec * 1000 + time.tv_usec / 1000;
+	if (ms <= 0)
+		return (0);
+	return (ms);
 }
 
-// size_t	get_philo_age(t_philo p)
-// {
-// 	return (p.start_time - get_ms());
-// }
+size_t	get_philo_age(t_philo *p)
+{
+	size_t	philo_age;
+
+	pthread_mutex_lock(p->meal_lock);
+	philo_age = get_ms() - p->start_time;
+	pthread_mutex_unlock(p->meal_lock);
+	return (philo_age);
+}
 
 void	locked_print(char *s, t_philo *p)
 {
 	pthread_mutex_lock(p->write_lock);
-	if (!(*p->is_dead))
-		printf("%zu %zu %s\n", get_ms() - p->start_time, p->id, s);
+	if (!is_dead_routine(p))
+		printf("%zu %zu %s\n", get_philo_age(p), p->id, s);
 	pthread_mutex_unlock(p->write_lock);
 }
 

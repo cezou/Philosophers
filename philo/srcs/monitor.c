@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 02:53:30 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 11:58:25 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 17:17:44 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 
 static void	kill_philos(t_philo *philo, bool there_is_a_dead)
 {
-	pthread_mutex_lock(philo->dead_lock);
 	if (there_is_a_dead)
 		locked_print(RED "died" RESET, philo);
+	pthread_mutex_lock(philo->dead_lock);
 	*(philo->is_dead) = 1;
 	pthread_mutex_unlock(philo->dead_lock);
 }
@@ -34,7 +34,7 @@ void	search_for_dead_philo(t_philo *philos)
 		i = 0;
 		while (i < philos->infos.nb_philo)
 		{
-			if (is_dead_monitor(philos[i]))
+			if (is_dead_monitor(&philos[i]))
 				return (kill_philos(&philos[i], 1));
 			i++;
 		}
@@ -58,18 +58,19 @@ void	check_dead_and_meals(t_philo *philos, t_infos infos)
 
 	while (1)
 	{
+		usleep(1000);
 		i = 0;
 		everyone_has_eaten = 1;
 		while (i < infos.nb_philo)
 		{
-			if (is_dead_monitor(philos[i]))
+			if (is_dead_monitor(&philos[i]))
 				return (kill_philos(&philos[i], 1));
 			if (everyone_has_eaten && !has_eaten(&philos[i], infos))
 				everyone_has_eaten = 0;
 			i++;
 		}
 		if (everyone_has_eaten)
-			return (kill_philos(&philos[i], 0));
+			return (kill_philos(&philos[0], 0));
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 12:01:05 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 12:51:12 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ int	create_threads(t_vars *v, t_infos infos)
 {
 	size_t	i;
 
-	if (pthread_create(&v->monitor, NULL, monitor, &v->philos) != 0)
-		return (-1);
 	i = 0;
 	while (i < infos.nb_philo)
 	{
@@ -26,6 +24,8 @@ int	create_threads(t_vars *v, t_infos infos)
 			return (-1);
 		i++;
 	}
+	if (pthread_create(&v->monitor, NULL, monitor, &v->philos) != 0)
+		return (-1);
 	return (0);
 }
 
@@ -33,8 +33,6 @@ int	join_threads(t_vars *v, t_infos infos)
 {
 	size_t	i;
 
-	if (pthread_join(v->monitor, NULL) != 0)
-		return (-1);
 	i = 0;
 	while (i < infos.nb_philo)
 	{
@@ -42,6 +40,8 @@ int	join_threads(t_vars *v, t_infos infos)
 			return (-1);
 		i++;
 	}
+	if (pthread_join(v->monitor, NULL) != 0)
+		return (-1);
 	return (0);
 }
 
