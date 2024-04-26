@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 15:47:16 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 22:34:31 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ typedef struct s_vars
 # define FAIL EXIT_FAILURE
 
 /* FUNCTIONS */
+void				think(t_philo *p);
+size_t				get_last_meal(t_philo *p);
 bool				is_eating(t_philo *philo);
 size_t				get_philo_age(t_philo *p);
 bool				is_dead_routine(t_philo *p);
@@ -117,7 +119,6 @@ void				destroy_all_mutexes(t_vars *v, pthread_mutex_t *forks,
 void				*routine(void *philosopher);
 void				*monitor(void *philosophers);
 void				eat(t_philo *p, bool is_even);
-void				think(t_philo *p);
 void				slip(t_philo *p);
 
 /*		Utils		*/

@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 16:00:37 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/26 17:57:24 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,6 @@ size_t	get_ms(void)
 	if (ms <= 0)
 		return (0);
 	return (ms);
-}
-
-size_t	get_philo_age(t_philo *p)
-{
-	size_t	philo_age;
-
-	pthread_mutex_lock(p->meal_lock);
-	philo_age = get_ms() - p->start_time;
-	pthread_mutex_unlock(p->meal_lock);
-	return (philo_age);
 }
 
 void	locked_print(char *s, t_philo *p)
