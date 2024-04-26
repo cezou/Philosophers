@@ -6,13 +6,13 @@ INCLUDES = -I.
 SRC_PATH = srcs
 OBJ_PATH = objs
 
-SRC = main.c parsing.c utils.c
+SRC = main.c parsing.c utils.c utils2.c mutexes.c init.c routine.c monitor.c
 
 SRC := $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SRC))
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g3 $(INCLUDES) -pthread
+CFLAGS = -Wall -Werror -Wextra -g $(INCLUDES) -pthread
 
 all: $(NAME)
 
