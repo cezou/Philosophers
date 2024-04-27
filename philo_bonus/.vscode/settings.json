@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"typeinfo": "c",
+		"philo.h": "c",
+		"limits.h": "c",
+		"stat.h": "c"
+	},
+	"functionHeaderExtension.headerFilePath": "/home/cviegas/Projets42/Philo/Intra/philo_bonus/philo.h"
+}
