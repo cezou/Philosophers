@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 06:57:52 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/27 07:15:50 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	wait_for_the_end(t_philo *philos)
 	size_t	i;
 
 	waitpid(-1, &dead_philo_id, 0);
+	print(RED " died" RESET, &philos[dead_philo_id - 1]);
 	i = 0;
 	while (i < philos[0].infos.nb_philo)
 	{

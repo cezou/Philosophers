@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 06:51:29 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/27 07:16:12 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,10 @@ void	sleep_if_not_dead(t_philo *p, size_t time_to_sleep_ms)
 	while (get_ms() - start_time < time_to_sleep_ms)
 	{
 		if (is_dead(p))
-			(print_dead(RED "died" RESET, p), sem_close(p->forks),
-				sem_unlink("/sem_" SEM_NAME), exit(p->id));
+			(sem_close(p->forks), sem_unlink("/sem_" SEM_NAME), exit(p->id));
 		usleep(500);
 	}
 	return ;
-}
-
-void	exit_and_print(t_philo *p, char *message)
-{
-	sem_close(p->forks);
-	sem_unlink("/sem_" SEM_NAME);
-	err(message);
-	exit(p->id);
 }
 
 void	eat(t_philo *p)
@@ -88,5 +79,5 @@ void	routine(t_philo *philo)
 		if (!is_dead(philo))
 			think(philo);
 	}
-	(print_dead(RED "died" RESET, philo), exit(philo->id));
+	(sem_close(philo->forks), sem_unlink(SEM_NAME), exit(philo->id));
 }

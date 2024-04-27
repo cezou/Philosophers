@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 06:57:33 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/27 07:17:32 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_philo
 # define BLUE "\033[1;34m"
 # define RESET "\033[0m"
 # define BOLD "\033[1m"
-# define SEM_NAME "aaaaa"
+# define SEM_NAME "aaaaaaaaaaa"
 
 # define ERR_0 "The program takes 4 or 5 arguments:\n"
 # define ERR_1 "    • number_of_philosophers\n    • time_to_die\n    "
@@ -82,6 +82,7 @@ typedef struct s_philo
 # define FAIL EXIT_FAILURE
 
 /* FUNCTIONS */
+void		exit_and_print(t_philo *p, char *message);
 void		print_dead(char *s, t_philo *p);
 
 /*		Init		*/

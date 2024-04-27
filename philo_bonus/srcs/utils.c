@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 06:50:26 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/27 07:05:41 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,12 @@ size_t	get_ms(void)
 	return (ms);
 }
 
-void	print(char *s, t_philo *p)
+void	exit_and_print(t_philo *p, char *message)
 {
-	if (!is_dead(p))
-		printf("%zu %zu %s\n", get_philo_age(p), p->id, s);
-}
-
-void	print_dead(char *s, t_philo *p)
-{
-	printf("%zu %zu %s\n", get_philo_age(p), p->id, s);
-}
-
-void	err(char *s)
-{
-	printf(RED BOLD "ERROR: " RESET RED "%s%s\n", s, RESET);
+	sem_close(p->forks);
+	sem_unlink("/sem_" SEM_NAME);
+	err(message);
+	exit(p->id);
 }
 
 // ft_strlen For more code visibility
