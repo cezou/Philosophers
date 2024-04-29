@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/29 03:24:55 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/29 05:38:14 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int	wait_for_the_end(t_philo *philos)
 		i++;
 	}
 	close_sem(&philos->sem);
-	printf("squid\n");
 	return (0);
 }
 
