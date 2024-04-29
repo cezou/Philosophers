@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 07:17:32 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/29 03:00:55 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <pthread.h>
 # include <semaphore.h>
 # include <signal.h>
 # include <stdbool.h>
@@ -30,29 +31,42 @@
 
 typedef struct s_infos
 {
-	size_t	nb_philo;
-	size_t	time_to_die;
-	size_t	time_to_eat;
-	size_t	time_to_sleep;
-	bool	must_eat;
-	size_t	nb_times_must_eat;
-	size_t	start_time;
-}			t_infos;
+	size_t			nb_philo;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
+	bool			must_eat;
+	size_t			nb_times_must_eat;
+	size_t			start_time;
+}					t_infos;
+
+typedef struct s_semaphores
+{
+	sem_t			*is_dead_lock;
+	sem_t			*meal_lock;
+	sem_t			*forks;
+	sem_t			*is_there_a_dead;
+	sem_t			*is_there_a_dead_lock;
+	sem_t			*is_eating_lock;
+
+}					t_semaphores;
 
 typedef struct s_philo
 {
-	pid_t	process;
+	pid_t			process;
+	pthread_t		monitor;
 
-	t_infos	infos;
-	sem_t	*forks;
-	size_t	start_time;
-	size_t	id;
-	bool	is_eating;
-	size_t	meals_eaten;
-	size_t	time_of_last_meal;
-	bool	*is_dead;
+	t_infos			infos;
+	t_semaphores	sem;
 
-}			t_philo;
+	size_t			start_time;
+	size_t			id;
+	bool			is_eating;
+	bool			is_dead;
+	size_t			meals_eaten;
+	size_t			time_of_last_meal;
+
+}					t_philo;
 
 // typedef enum e_action
 // {
@@ -69,7 +83,7 @@ typedef struct s_philo
 # define BLUE "\033[1;34m"
 # define RESET "\033[0m"
 # define BOLD "\033[1m"
-# define SEM_NAME "aaaaaaaaaaa"
+# define SEM_NAME "aaaaaaaaqqqqqaaaaa"
 
 # define ERR_0 "The program takes 4 or 5 arguments:\n"
 # define ERR_1 "    • number_of_philosophers\n    • time_to_die\n    "
@@ -82,29 +96,41 @@ typedef struct s_philo
 # define FAIL EXIT_FAILURE
 
 /* FUNCTIONS */
-void		exit_and_print(t_philo *p, char *message);
-void		print_dead(char *s, t_philo *p);
+void				*monitor(void *philosopher);
+void				check_dead(t_philo *p);
+void				check_dead_and_meals(t_philo *p);
+bool				has_eaten(t_philo *philo);
+bool				is_philo_dead(t_philo *philo);
+void				kill_philo(t_philo *philo);
+bool				is_there_a_dead_philo(t_philo *p);
+void				p_semclose(sem_t *sem, char *name);
+t_semaphores		init_sem(t_infos infos);
+void				close_sem(t_semaphores *sem);
+int					init_philos(t_philo *philos, t_infos infos,
+						t_semaphores sem);
+void				exit_simulation(t_philo *p);
+void				exit_and_print(t_philo *p, char *message);
+void				print_dead(char *s, t_philo *p);
 
 /*		Init		*/
-long int	atoi_is_unsignedint(const char *s);
-void		set_infos(t_infos *infos, char **av);
-int			init_philos(t_philo *philos, t_infos infos, sem_t *forks);
+long int			atoi_is_unsignedint(const char *s);
+void				set_infos(t_infos *infos, char **av);
 
 /*		Routine		*/
-void		routine(t_philo *philo);
-void		eat(t_philo *p);
-void		slip(t_philo *p);
-bool		is_dead(t_philo *philo);
+void				routine(t_philo *philo);
+void				eat(t_philo *p);
+void				slip(t_philo *p);
+bool				is_dead(t_philo *philo);
 
 /*		Utils		*/
-bool		is_nb(char c);
-bool		is_whitespace(char c);
-void		err(char *s);
-size_t		get_ms(void);
-void		think(t_philo *p);
-size_t		get_last_meal(t_philo *p);
-bool		is_eating(t_philo *philo);
-size_t		get_philo_age(t_philo *p);
-void		print(char *s, t_philo *p);
+bool				is_nb(char c);
+bool				is_whitespace(char c);
+void				err(char *s);
+size_t				get_ms(void);
+void				think(t_philo *p);
+size_t				get_last_meal(t_philo *p);
+bool				is_eating(t_philo *philo);
+size_t				get_philo_age(t_philo *p);
+void				print(char *s, t_philo *p);
 
 #endif

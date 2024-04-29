@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 07:15:50 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/29 03:24:55 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ int	wait_for_the_end(t_philo *philos)
 	size_t	i;
 
 	waitpid(-1, &dead_philo_id, 0);
-	print(RED " died" RESET, &philos[dead_philo_id - 1]);
+	dead_philo_id = WEXITSTATUS(dead_philo_id);
+	print_dead(RED "died" RESET, &philos[dead_philo_id - 1]);
 	i = 0;
 	while (i < philos[0].infos.nb_philo)
 	{
@@ -43,26 +44,24 @@ int	wait_for_the_end(t_philo *philos)
 			kill(philos[i].process, SIGKILL);
 		i++;
 	}
-	sem_close(philos[0].forks);
-	sem_unlink("/sem_" SEM_NAME);
+	close_sem(&philos->sem);
+	printf("squid\n");
 	return (0);
 }
 
 int	main(int ac, char **av)
 {
-	t_infos	infos;
-	t_philo	philos[MAX_PHILOS];
-	sem_t	*forks;
+	t_infos			infos;
+	t_philo			philos[MAX_PHILOS];
+	t_semaphores	sem;
 
 	if (ac < 5 || ac > 6)
 		return (printf(RED BOLD ERR_0 RESET RED ERR_1 ERR_2 ERR_3 RESET), FAIL);
 	infos.must_eat = (ac == 6);
 	set_infos(&infos, av);
-	forks = sem_open(SEM_NAME, O_CREAT, 0644, infos.nb_philo);
-	if (!forks)
-		return (err("sem_open failed"), FAIL);
-	init_philos(philos, infos, forks);
+	sem = init_sem(infos);
+	init_philos(philos, infos, sem);
 	if (create_childs(philos, infos) == -1)
-		return (err("one fork failed"), sem_close(forks), FAIL);
+		return (err("one fork failed"), close_sem(&sem), FAIL);
 	return (wait_for_the_end(philos));
 }

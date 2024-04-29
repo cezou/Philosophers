@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 07:05:41 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/28 23:35:19 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,14 @@ size_t	get_ms(void)
 
 void	exit_and_print(t_philo *p, char *message)
 {
-	sem_close(p->forks);
-	sem_unlink("/sem_" SEM_NAME);
-	err(message);
+	if (message)
+		err(message);
+	exit_simulation(p);
+}
+
+void	exit_simulation(t_philo *p)
+{
+	close_sem(&p->sem);
 	exit(p->id);
 }
 

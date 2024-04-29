@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 06:52:54 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/04/29 03:05:28 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,23 @@ void	set_infos(t_infos *infos, char **av)
 	infos->start_time = 0;
 }
 
-int	init_philos(t_philo *philos, t_infos infos, sem_t *forks)
+int	init_philos(t_philo *philos, t_infos infos, t_semaphores sem)
 {
-	bool	dead_flag;
+	size_t	start_time;
+	size_t	i;
 
-	dead_flag = 0;
-	size_t(i) = 0;
+	i = 0;
+	start_time = get_ms();
 	while (i < infos.nb_philo)
 	{
 		philos[i].infos = infos;
-		philos[i].forks = forks;
+		philos[i].sem = sem;
 		philos[i].time_of_last_meal = 0;
 		philos[i].id = i + 1;
 		philos[i].meals_eaten = 0;
 		philos[i].is_eating = 0;
+		philos[i].is_dead = 0;
+		philos[i].start_time = start_time;
 		i++;
 	}
 	return (0);
