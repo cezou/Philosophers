@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/29 03:05:28 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/02 22:12:45 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,37 @@ void	set_infos(t_infos *infos, char **av)
 	if (infos->must_eat)
 		set_value_or_exit(atoi(av[5]), &infos->nb_times_must_eat);
 	infos->start_time = 0;
+}
+
+static void	set_null_sem(t_semaphores *sem)
+{
+	(sem_unlink("/sem_" SEM_NAME), sem_unlink("/sem_everyone_ate_" SEM_NAME),
+		sem_unlink("/sem_there_is_a_dead_" SEM_NAME),
+		sem_unlink("/sem_someone_died_" SEM_NAME),
+		sem_unlink("/sem_start_" SEM_NAME));
+	sem->forks = NULL;
+	sem->everyone_ate = NULL;
+	sem->there_is_a_dead = NULL;
+	sem->someone_died = NULL;
+	sem->start = NULL;
+}
+
+t_semaphores	init_sem(t_infos infos)
+{
+	t_semaphores	sem;
+
+	set_null_sem(&sem);
+	sem.forks = sem_open("/sem_" SEM_NAME, O_CREAT, 0644, infos.nb_philo);
+	sem.everyone_ate = sem_open("/sem_everyone_ate_" SEM_NAME, O_CREAT, 0644,
+			infos.nb_philo);
+	sem.there_is_a_dead = sem_open("/sem_there_is_a_dead_" SEM_NAME, O_CREAT,
+			0644, infos.nb_philo);
+	sem.someone_died = sem_open("/sem_someone_died_" SEM_NAME, O_CREAT, 0644,
+			1);
+	if (!sem.forks || !sem.everyone_ate || !sem.there_is_a_dead
+		|| !sem.someone_died)
+		(err("sem_open failed"), close_sem(&sem), exit(FAIL));
+	return (sem);
 }
 
 int	init_philos(t_philo *philos, t_infos infos, t_semaphores sem)

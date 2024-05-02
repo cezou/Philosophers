@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/29 05:38:14 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/02 22:32:53 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,18 @@ int	create_childs(t_philo *philos, t_infos infos)
 {
 	size_t	i;
 
+	if (infos.nb_philo == 1)
+	{
+		philos[0].process = fork();
+		if (philos[0].process == -1)
+			return (-1);
+		if (!philos[0].process)
+			alone(&philos[0]);
+		else
+			waitpid(philos[0].process, NULL, 0);
+		close_sem(&philos[0].sem);
+		exit(0);
+	}
 	i = 0;
 	while (i < infos.nb_philo)
 	{
@@ -23,28 +35,9 @@ int	create_childs(t_philo *philos, t_infos infos)
 		if (philos[i].process < 0)
 			return (-1);
 		if (!philos[i].process)
-			routine(&philos[i]);
+			routine(philos[i]);
 		i++;
 	}
-	return (0);
-}
-
-int	wait_for_the_end(t_philo *philos)
-{
-	int		dead_philo_id;
-	size_t	i;
-
-	waitpid(-1, &dead_philo_id, 0);
-	dead_philo_id = WEXITSTATUS(dead_philo_id);
-	print_dead(RED "died" RESET, &philos[dead_philo_id - 1]);
-	i = 0;
-	while (i < philos[0].infos.nb_philo)
-	{
-		if ((int)philos[i].id != dead_philo_id)
-			kill(philos[i].process, SIGKILL);
-		i++;
-	}
-	close_sem(&philos->sem);
 	return (0);
 }
 
@@ -61,6 +54,8 @@ int	main(int ac, char **av)
 	sem = init_sem(infos);
 	init_philos(philos, infos, sem);
 	if (create_childs(philos, infos) == -1)
-		return (err("one fork failed"), close_sem(&sem), FAIL);
-	return (wait_for_the_end(philos));
+		return (err("one fork failed"), close_sem(&sem), kill_everyone(philos),
+			FAIL);
+	create_monitor(philos);
+	return (wait_for_childs(infos.nb_philo, sem));
 }

@@ -6,7 +6,7 @@ INCLUDES = -I.
 SRC_PATH = srcs
 OBJ_PATH = objs
 
-SRC = main.c parsing.c utils.c utils2.c getters.c init.c routine.c sem_utils.c monitor.c
+SRC = main.c parsing.c utils.c utils2.c init.c routine.c sem_utils.c monitor.c alone.c
 
 SRC := $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SRC))

@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/29 05:26:24 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/02 22:22:36 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void	sleep_if_not_dead(t_philo *p, size_t time_to_sleep_ms)
 	start_time = get_ms();
 	while (get_ms() - start_time < time_to_sleep_ms)
 	{
-		if (is_dead(p))
-			(exit_simulation(p));
+		routine_check_dead(p);
 		usleep(500);
 	}
 	return ;
@@ -28,34 +27,25 @@ void	sleep_if_not_dead(t_philo *p, size_t time_to_sleep_ms)
 
 void	eat(t_philo *p)
 {
-	if (sem_wait(p->sem.forks) == -1)
-		exit_and_print(p, "sem_wait failed");
+	routine_check_dead(p);
+	sem_wait(p->sem.forks);
 	print("has taken a fork", p);
-	if (sem_wait(p->sem.forks) == -1)
-		exit_and_print(p, "sem_wait failed");
+	routine_check_dead(p);
+	sem_wait(p->sem.forks);
 	print("has taken a fork", p);
-	sem_wait(p->sem.is_eating_lock);
 	p->is_eating = 1;
-	sem_post(p->sem.is_eating_lock);
-	sem_wait(p->sem.meal_lock);
+	routine_check_dead(p);
 	p->time_of_last_meal = get_ms();
-	sem_post(p->sem.meal_lock);
 	print("is " GREEN "eating" RESET, p);
 	sleep_if_not_dead(p, p->infos.time_to_eat);
-	if (sem_post(p->sem.forks) == -1)
-		exit_and_print(p, "sem_post failed");
-	if (sem_post(p->sem.forks) == -1)
-		exit_and_print(p, "sem_post failed");
-	sem_wait(p->sem.is_eating_lock);
+	sem_post(p->sem.forks);
+	sem_post(p->sem.forks);
 	p->is_eating = 0;
-	sem_post(p->sem.is_eating_lock);
 	if (p->infos.must_eat)
 	{
-		sem_wait(p->sem.meal_lock);
 		p->meals_eaten++;
-		sem_post(p->sem.meal_lock);
 		if (p->meals_eaten == p->infos.nb_times_must_eat)
-			exit_simulation(p);
+			sem_post(p->sem.everyone_ate);
 	}
 	return ;
 }
@@ -74,24 +64,22 @@ void	slip(t_philo *p)
 	return (sleep_if_not_dead(p, p->infos.time_to_sleep));
 }
 
-void	routine(t_philo *philo)
+void	routine(t_philo philo)
 {
-	sem_wait(philo->sem.meal_lock);
-	philo->time_of_last_meal = get_ms();
-	philo->start_time = get_ms();
-	sem_post(philo->sem.meal_lock);
-	if (pthread_create(&philo->monitor, NULL, monitor, philo) == -1)
-		exit_simulation(philo);
-	if (pthread_detach(philo->monitor) != 0)
-		exit_simulation(philo);
-	while (!is_dead(philo))
+	sem_wait(philo.sem.there_is_a_dead);
+	sem_wait(philo.sem.everyone_ate);
+	philo.time_of_last_meal = get_ms();
+	philo.start_time = get_ms();
+	if (philo.id % 2)
+		sleep_if_not_dead(&philo, philo.infos.time_to_eat);
+	while (1)
 	{
-		if (!is_dead(philo))
-			eat(philo);
-		if (!is_dead(philo))
-			slip(philo);
-		if (!is_dead(philo))
-			think(philo);
+		routine_check_dead(&philo);
+		eat(&philo);
+		routine_check_dead(&philo);
+		slip(&philo);
+		routine_check_dead(&philo);
+		think(&philo);
 	}
-	exit_simulation(philo);
+	exit_simulation(&philo);
 }
