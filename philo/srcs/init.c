@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 15:49:13 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 11:20:27 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	set_value_or_exit(long int entry, size_t *nb)
 {
 	if (entry == -1)
 	{
-		printf(RED BOLD "ERROR: " RESET RED ERR_NB RESET);
+		printf(RED "ERROR: " RESET RRED ERR_NB RESET);
 		exit(FAIL);
 	}
 	*nb = entry;
@@ -25,14 +25,20 @@ static void	set_value_or_exit(long int entry, size_t *nb)
 void	set_infos(t_infos *infos, char **av)
 {
 	set_value_or_exit(atoi_is_unsignedint(av[1]), &infos->nb_philo);
-	if (infos->nb_philo > 200)
-		(printf(RED BOLD "ERROR: " RESET RED "Too much philos (> 200)\n" RESET),
+	if (infos->nb_philo > 200 || infos->nb_philo == 0)
+		(printf(RED "ERROR: " RESET RRED "Philo number != ]0;200]\n" RESET),
 			exit(FAIL));
 	set_value_or_exit(atoi_is_unsignedint(av[2]), &infos->time_to_die);
 	set_value_or_exit(atoi_is_unsignedint(av[3]), &infos->time_to_eat);
 	set_value_or_exit(atoi_is_unsignedint(av[4]), &infos->time_to_sleep);
 	if (infos->must_eat)
-		set_value_or_exit(atoi(av[5]), &infos->nb_times_must_eat);
+	{
+		set_value_or_exit(atoi_is_unsignedint(av[5]),
+			&infos->nb_times_must_eat);
+		if (infos->nb_times_must_eat == 0)
+			(printf(GREEN "Success: " RESET "Philos don't have to eat\n"),
+				exit(0));
+	}
 	infos->start_time = 0;
 }
 

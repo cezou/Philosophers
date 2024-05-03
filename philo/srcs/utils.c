@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 17:57:24 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 11:05:21 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,5 @@ void	locked_print(char *s, t_philo *p)
 
 void	err(char *s)
 {
-	printf(RED BOLD "ERROR: " RESET RED "%s%s\n", s, RESET);
+	printf(RED "ERROR: " RESET RRED "%s%s\n", s, RESET);
 }
-
-// ft_strlen For more code visibility
-// size_t	len(const char *s)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (s[i++])
-// 		;
-// 	return (i);
-// }

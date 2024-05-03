@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/03 10:32:27 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 11:21:02 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static void	set_value_or_exit(long int entry, size_t *nb)
 void	set_infos(t_infos *infos, char **av)
 {
 	set_value_or_exit(atoi_is_unsignedint(av[1]), &infos->nb_philo);
-	if (infos->nb_philo > 200)
-		(printf(RED "ERROR: " RESET RRED "Too much philos (> 200)\n" RESET),
+	if (infos->nb_philo > 200 || infos->nb_philo == 0)
+		(printf(RED "ERROR: " RESET RRED "Philo number != ]0;200]\n" RESET),
 			exit(FAIL));
 	set_value_or_exit(atoi_is_unsignedint(av[2]), &infos->time_to_die);
 	set_value_or_exit(atoi_is_unsignedint(av[3]), &infos->time_to_eat);

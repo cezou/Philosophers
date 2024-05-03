@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/27 02:26:56 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 11:07:59 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,32 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
+
+/* DEFINES */
+# define FAIL EXIT_FAILURE
+# define SUCCESS EXIT_SUCCESS
 # define MAX_PHILOS 200
 # define LEFT 0
 # define RIGHT 1
-# define EVERYONE_HAS_EATEN 0
-# define THERE_IS_A_DEAD 1
+
+/* Colors */
+# define RED "\033[1;31m"
+# define RRED "\033[0;31m"
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define BLUE "\033[1;34m"
+# define RESET "\033[0m"
+# define BOLD "\033[1m"
+
+/* MESSAGES */
+# define ERR_0 "The program takes 4 or 5 arguments:\n"
+# define ERR_1 "    • number_of_philosophers\n    • time_to_die\n    "
+# define ERR_2 "• time_to_eat\n    • time_to_sleep\n    "
+# define ERR_3 "• (optional) number_of_times_each_philosopher_must_eat\n"
+# define ERR_NB "Entries needs to be only unsigned int values\n"
+# define T_ERR_0 "Problem during a mutex initiation"
+# define T_ERR_1 "Problem during a thread creation"
+# define T_ERR_2 "Problem during a thread joining"
 
 typedef struct s_infos
 {
@@ -69,32 +90,6 @@ typedef struct s_vars
 	pthread_t		monitor;
 }					t_vars;
 
-// typedef enum e_action
-// {
-// 	EAT,
-// 	THINK,
-// 	SLEEP,
-// 	FINISHED
-// };
-
-/* Colors */
-# define RED "\033[1;31m"
-# define GREEN "\033[1;32m"
-# define YELLOW "\033[1;33m"
-# define BLUE "\033[1;34m"
-# define RESET "\033[0m"
-# define BOLD "\033[1m"
-
-# define ERR_0 "The program takes 4 or 5 arguments:\n"
-# define ERR_1 "    • number_of_philosophers\n    • time_to_die\n    "
-# define ERR_2 "• time_to_eat\n    • time_to_sleep\n    "
-# define ERR_3 "• (optional) number_of_times_each_philosopher_must_eat\n"
-# define ERR_NB "Entries needs to be only unsigned int values\n"
-# define T_ERR_0 "Problem during a mutex initiation"
-# define T_ERR_1 "Problem during a thread creation"
-# define T_ERR_2 "Problem during a thread joining"
-# define FAIL EXIT_FAILURE
-
 /* FUNCTIONS */
 
 void				think(t_philo *p);
@@ -121,6 +116,9 @@ void				*routine(void *philosopher);
 void				*monitor(void *philosophers);
 void				eat(t_philo *p, bool is_even);
 void				slip(t_philo *p);
+bool				create_alone(t_infos infos);
+int					create_threads(t_vars *v, t_infos infos);
+int					join_threads(t_vars *v, t_infos infos);
 
 /*		Utils		*/
 bool				is_nb(char c);
