@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:58:17 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/02 22:56:41 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 10:32:06 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 
 /* Colors */
 # define RED "\033[1;31m"
+# define RRED "\033[0;31m"
 # define GREEN "\033[1;32m"
 # define YELLOW "\033[1;33m"
 # define BLUE "\033[1;34m"
@@ -88,6 +89,8 @@ typedef struct s_philo
 }					t_philo;
 
 /* FUNCTIONS */
+void				wait_everyone_to_start(t_philo philo);
+void				print_dead(t_philo *p);
 void				sleep_if_not_dead(t_philo *p, size_t time_to_sleep_ms);
 void				alone(t_philo *p);
 void				kill_everyone(t_philo *philos);
@@ -103,9 +106,6 @@ t_semaphores		init_sem(t_infos infos);
 void				close_sem(t_semaphores *sem);
 int					init_philos(t_philo *philos, t_infos infos,
 						t_semaphores sem);
-void				exit_simulation(t_philo *p);
-void				exit_and_print(t_philo *p, char *message);
-void				print_dead(char *s, t_philo *p);
 
 /*		Init		*/
 long int			atoi_is_unsignedint(const char *s);
@@ -122,7 +122,6 @@ bool				is_whitespace(char c);
 void				err(char *s);
 size_t				get_ms(void);
 void				think(t_philo *p);
-size_t				get_philo_age(t_philo *p);
 void				print(char *s, t_philo *p);
 
 #endif

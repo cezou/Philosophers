@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/28 23:35:19 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 10:24:39 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,20 @@ size_t	get_ms(void)
 	return (ms);
 }
 
-void	exit_and_print(t_philo *p, char *message)
+void	wait_everyone_to_start(t_philo philo)
 {
-	if (message)
-		err(message);
-	exit_simulation(p);
+	if ((int)(philo.start_time + 500) - get_ms())
+		usleep(1000 * (philo.start_time + 500 - get_ms()));
 }
 
-void	exit_simulation(t_philo *p)
+void	routine_check_dead(t_philo *p)
 {
-	close_sem(&p->sem);
-	exit(p->id);
+	if (!p->is_eating && get_ms() - p->time_of_last_meal > p->infos.time_to_die)
+	{
+		sem_wait(p->sem.someone_died);
+		print_dead(p);
+		sem_post(p->sem.there_is_a_dead);
+		close_sem(&p->sem);
+		exit(1);
+	}
 }
-
-// ft_strlen For more code visibility
-// size_t	len(const char *s)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (s[i++])
-// 		;
-// 	return (i);
-// }

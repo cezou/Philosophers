@@ -6,11 +6,20 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:56:06 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/02 22:32:53 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 10:32:47 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	alone(t_philo *p)
+{
+	p->start_time = get_ms();
+	p->time_of_last_meal = get_ms();
+	print("has taken a fork", p);
+	sleep_if_not_dead(p, p->infos.time_to_die);
+	print(RED "died" RESET, p);
+}
 
 int	create_childs(t_philo *philos, t_infos infos)
 {
@@ -48,7 +57,7 @@ int	main(int ac, char **av)
 	t_semaphores	sem;
 
 	if (ac < 5 || ac > 6)
-		return (printf(RED BOLD ERR_0 RESET RED ERR_1 ERR_2 ERR_3 RESET), FAIL);
+		return (printf(RED ERR_0 RESET RRED ERR_1 ERR_2 ERR_3 RESET), FAIL);
 	infos.must_eat = (ac == 6);
 	set_infos(&infos, av);
 	sem = init_sem(infos);

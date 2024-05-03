@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/02 22:22:36 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/03 10:35:44 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	eat(t_philo *p)
 	routine_check_dead(p);
 	sem_wait(p->sem.forks);
 	print("has taken a fork", p);
-	p->is_eating = 1;
 	routine_check_dead(p);
+	p->is_eating = 1;
 	p->time_of_last_meal = get_ms();
 	print("is " GREEN "eating" RESET, p);
 	sleep_if_not_dead(p, p->infos.time_to_eat);
@@ -68,6 +68,7 @@ void	routine(t_philo philo)
 {
 	sem_wait(philo.sem.there_is_a_dead);
 	sem_wait(philo.sem.everyone_ate);
+	wait_everyone_to_start(philo);
 	philo.time_of_last_meal = get_ms();
 	philo.start_time = get_ms();
 	if (philo.id % 2)
@@ -81,5 +82,5 @@ void	routine(t_philo philo)
 		routine_check_dead(&philo);
 		think(&philo);
 	}
-	exit_simulation(&philo);
+	close_sem(&philo.sem);
 }
