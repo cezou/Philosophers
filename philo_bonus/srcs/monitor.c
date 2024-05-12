@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 02:51:02 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/03 10:23:07 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/12 04:19:19 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,8 @@ void	*check_meals(void *philosophers)
 	int		i;
 
 	philos = (t_philo *)philosophers;
+	usleep(10000);
 	i = -1;
-	if ((int)((*philos).start_time + 500) - get_ms())
-		usleep(1000 * ((*philos).start_time + 500 - get_ms()));
 	while (++i < (int)(*philos).infos.nb_philo)
 		sem_wait((*philos).sem.everyone_ate);
 	sem_post((*philos).sem.there_is_a_dead);
@@ -47,10 +46,9 @@ void	*check_dead(void *philosophers)
 	int		i;
 
 	philos = (t_philo *)philosophers;
-	i = -1;
-	if ((int)((*philos).start_time + 500) - get_ms())
-		usleep(1000 * ((*philos).start_time + 500 - get_ms()));
+	usleep(10000);
 	sem_wait((*philos).sem.there_is_a_dead);
+	i = -1;
 	while (++i < (int)(*philos).infos.nb_philo)
 		sem_post((*philos).sem.everyone_ate);
 	kill_everyone(philos);

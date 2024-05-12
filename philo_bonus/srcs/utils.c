@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:39:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/03 10:24:39 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/12 04:28:35 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	wait_everyone_to_start(t_philo philo)
 
 void	routine_check_dead(t_philo *p)
 {
-	if (!p->is_eating && get_ms() - p->time_of_last_meal > p->infos.time_to_die)
+	if (!p->is_eating && get_ms()
+		- p->time_of_last_meal >= p->infos.time_to_die)
 	{
 		sem_wait(p->sem.someone_died);
 		print_dead(p);

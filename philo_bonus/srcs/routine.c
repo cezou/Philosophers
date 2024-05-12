@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/03 10:35:44 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/12 04:41:04 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	routine(t_philo philo)
 {
 	sem_wait(philo.sem.there_is_a_dead);
 	sem_wait(philo.sem.everyone_ate);
-	wait_everyone_to_start(philo);
 	philo.time_of_last_meal = get_ms();
 	philo.start_time = get_ms();
 	if (philo.id % 2)
