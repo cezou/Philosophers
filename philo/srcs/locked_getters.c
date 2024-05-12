@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 11:57:34 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 18:26:37 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/12 04:51:49 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ bool	is_dead_monitor(t_philo *philo)
 	bool	is_dead;
 
 	pthread_mutex_lock(philo->meal_lock);
-	is_dead = (get_ms() - philo->time_of_last_meal > philo->infos.time_to_die
-			&& !is_eating(philo));
+	is_dead = (!is_eating(philo) && get_ms()
+			- philo->time_of_last_meal >= philo->infos.time_to_die);
 	pthread_mutex_unlock(philo->meal_lock);
 	return (is_dead);
 }
