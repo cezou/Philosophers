@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/01 17:38:14 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/19 00:37:21 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,26 @@ void	eat(t_philo *p, bool is_even)
 	pthread_mutex_lock(p->meal_lock);
 	p->time_of_last_meal = get_ms();
 	pthread_mutex_unlock(p->meal_lock);
-	sleep_if_not_dead(p, p->infos.time_to_eat, 1);
+	sleep_if_not_dead(p, p->infos.time_to_eat, 0);
 	pthread_mutex_unlock(p->fork[!is_even]);
 	pthread_mutex_unlock(p->fork[is_even]);
 	pthread_mutex_lock(p->is_eating_lock);
 	p->is_eating = 0;
 	pthread_mutex_unlock(p->is_eating_lock);
-	pthread_mutex_lock(p->meal_lock);
 	if (p->infos.must_eat)
+	{
+		pthread_mutex_lock(p->meal_lock);
 		p->meals_eaten++;
-	pthread_mutex_unlock(p->meal_lock);
+		pthread_mutex_unlock(p->meal_lock);
+	}
 	return ;
 }
 
 void	think(t_philo *p)
 {
 	locked_print("is " YELLOW "thinking" RESET, p);
-	if (p->infos.time_to_eat > p->infos.time_to_sleep)
+	if (p->infos.nb_philo % 2 && p->infos.time_to_eat
+		* 2 > p->infos.time_to_sleep)
 		sleep_if_not_dead(p, p->infos.time_to_eat * 2 - p->infos.time_to_sleep,
 			1);
 	return ;
@@ -76,6 +79,8 @@ void	*routine(void *philosopher)
 	philo->start_time = get_ms();
 	philo->time_of_last_meal = get_ms();
 	pthread_mutex_unlock(philo->meal_lock);
+	if (philo->id % 2)
+		sleep_if_not_dead(philo, philo->infos.time_to_eat, 1);
 	while (!is_dead_routine(philo))
 	{
 		if (!is_dead_routine(philo))

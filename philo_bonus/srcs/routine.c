@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 22:51:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/05/12 04:41:04 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/19 00:45:06 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	eat(t_philo *p)
 void	think(t_philo *p)
 {
 	print("is " YELLOW "thinking" RESET, p);
-	if (p->infos.time_to_eat > p->infos.time_to_sleep)
+	if (p->infos.nb_philo % 2 && p->infos.time_to_eat
+		* 2 > p->infos.time_to_sleep)
 		sleep_if_not_dead(p, p->infos.time_to_eat * 2 - p->infos.time_to_sleep);
 	return ;
 }

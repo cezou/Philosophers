@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 02:53:30 by cviegas           #+#    #+#             */
-/*   Updated: 2024/04/26 17:17:44 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/05/19 00:34:12 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	*monitor(void *philosophers)
 	t_philo	*philos;
 
 	philos = (t_philo *)philosophers;
+	usleep(philos->infos.nb_philo * 500);
 	if (philos->infos.must_eat)
 		check_dead_and_meals(philos, philos[0].infos);
 	else
